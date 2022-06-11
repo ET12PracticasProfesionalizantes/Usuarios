@@ -1,28 +1,98 @@
 const express = require('express')
 const router = express.Router()
+const db = require('../models')
+const Usuario = db.usuario
 
-router.get('/usuario', (req, res) => {
-    res.send('aca van los usuarios')
+router.get('/usuario', async (req, res) => {
+    await Usuario.findAll()
+        .then(data => {
+            res.send(data)
+        }).catch(error => {
+            res.status(500).send({
+                message: error.message
+            })
+        })
 })
 
-router.get('/usuario/:id', (req, res) => {
+router.get('/usuario/:id', async (req, res) => {
     let id = req.params.id
 
-    res.send(`aca van el usuario con id ${id}`)
+    await Usuario.findByPk(id)
+        .then(data => {
+            res.send(data)
+        }).catch(error => {
+            res.status(500).send({
+                message: error.message
+            })
+        })
 })
 
-router.post('/usuario', (req, res) => {
-    let usuario = req.body
+router.post('/usuario', async (req, res) => {
+    console.log(req.body)
+    if (!req.body.usuario || !req.body.contrasenia || !req.body.email) {
+        res.status(400).send({
+            message: "Los campos usuario, contraseña y email son obligatorios"
+        });
+        return;
+    }
 
-    res.send(`aca se crea el usuario ${JSON.stringify(usuario)}`)
+    const nuevoUsuario = {
+        usuario: req.body.usuario,
+        contrasenia: req.body.contrasenia,
+        email: req.body.email,
+        nombre: req.body.nombre,
+        lastName: req.body.lastName,
+        habilitado: false,
+        createAt: Date.now(),
+        updatedAt: Date.now(),
+    };
+
+    const data = await Usuario.create(nuevoUsuario)
+
+    res.send({
+        message: 'Usuario creado'
+    })
 })
 
 router.put('/usuario/:id', (req, res) => {
+    const id = req.params.id;
 
+    await User.update(req.body, {
+        where: { id: id }
+    }).then(data => {
+        if (data != 1) {
+            res.send({
+                message: `No se puede actualizar el usuario con id=${id}`
+            });
+        }
+    }).catch(error => {
+        res.status(500).send({
+            message: error.message
+        })
+    })
 })
 
-router.delete('/usuario/:id', (req, res) => {
+router.delete('/usuario/:id', async (req, res) => {
+    let id = req.params.id
 
+    await Usuario.destroy({
+        where: {
+            id: id
+        }
+    }).then(data => {
+        if (data == 1)
+            res.send({
+                message: 'Usuario eliminado'
+            })
+        else
+            res.send({
+                message: `No se pudo eliminar el usuario con id: ${id}`
+            })
+    }).catch(error => {
+        res.send(500, {
+            message: error.message
+        })
+    })
 })
 
 module.exports = router
