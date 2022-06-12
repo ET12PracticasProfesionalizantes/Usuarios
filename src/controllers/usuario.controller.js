@@ -4,14 +4,15 @@ const db = require('../models')
 const Usuario = db.usuario
 
 router.get('/usuario', async (req, res) => {
-    await Usuario.findAll()
-        .then(data => {
-            res.send(data)
-        }).catch(error => {
-            res.status(500).send({
-                message: error.message
-            })
+    await Usuario.findAll({
+        attributes: ['id', 'usuario', 'contrasenia', 'nombre', 'email', 'habilitado']
+    }).then(data => {
+        res.send(data)
+    }).catch(error => {
+        res.status(500).send({
+            message: error.message
         })
+    })
 })
 
 router.get('/usuario/:id', async (req, res) => {
