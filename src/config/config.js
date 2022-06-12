@@ -1,4 +1,5 @@
-{
+require('dotenv').config();
+module.exports = {
   "development": {
     "username": "root",
     "password": "root",
@@ -6,12 +7,12 @@
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
-  "test": {
-    "username": "MYSQLUSER",
-    "password": "MYSQLPASSWORD",
-    "database": "MYSQLDATABASE",
-    "port": "MYSQLPORT",
-    "host": "MYSQLHOST",
+  "testing": {
+    "username": process.env.MYSQLUSER,
+    "password": process.env.MYSQLPASSWORD,
+    "database": process.env.MYSQLDATABASE,
+    "port": process.env.MYSQLPORT,
+    "host": process.env.MYSQLHOST,
     "dialect": "mysql"
   },
   "production": {
