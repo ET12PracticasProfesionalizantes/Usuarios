@@ -10,4 +10,9 @@ app.use(express.json());
 
 app.use('/api', require('./controllers/usuario.controller'))
 
-app.listen(port)
+db.sequelize.sync()
+    .then(() => {
+        app.listen(port)
+    }).catch(error => {
+        console.log(error)
+    })
