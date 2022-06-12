@@ -17,6 +17,9 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      nombre: {
+        type: Sequelize.STRING
+      },
       habilitado: {
         type: Sequelize.BOOLEAN
       },
